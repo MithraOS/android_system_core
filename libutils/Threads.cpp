@@ -86,6 +86,13 @@ struct thread_data_t {
         char * name = t->threadName;
         delete t;
         setpriority(PRIO_PROCESS, 0, prio);
+// BEGIN Motorola, IKJBXLINE-9555, rknize2, 05/10/2013
+#if defined(__ANDROID__)
+        if (prio == ANDROID_PRIORITY_REALTIME) {
+            set_sched_policy(gettid(), SP_REALTIME);
+        } else
+#endif
+// END Motorola, IKJBXLINE-9555
         if (prio >= ANDROID_PRIORITY_BACKGROUND) {
             set_sched_policy(0, SP_BACKGROUND);
         } else {
